@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neogipara Nagarikbrinda</title>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.08);
+            --radius-lg: 16px;
+            --radius-md: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html, body {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Maroon Top Rolling Bar Styling */
+        .top-ticker-bar {
+            background-color: #800000;
+            color: #ffffff;
+            padding: 8px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            width: 100%;
+        }
+
+        /* Modern Sticky Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Dropdown Menu */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--card-bg);
+            min-width: 250px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0;
+            z-index: 1000;
+        }
+        .dropdown-content a {
+            padding: 0.7rem 1.2rem;
+            display: block;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+        .dropdown-content a:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        /* Main Container - Adjusted to allow 100% full-bleed layouts */
+        main {
+            flex: 1;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 0;
+            border-top: 1px solid #1e293b;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Maroon Top Rolling Bar -->
+    <div class="top-ticker-bar">
+        <marquee behavior="scroll" direction="left" scrollamount="6">
+            Thanks for being with us. Please follow the website for the upcoming events.
+        </marquee>
+    </div>
+
+    <header>
+        <nav>
+            <a href="/" class="logo">🏛️ Neogipara Nagarikbrinda</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about-us">About Us</a></li>
+                
+                <!-- Updated Activities Dropdown Menu -->
+                <li class="dropdown">
+                    <a href="#">Activities ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/activities/cultural-activities">Cultural Activities</a>
+                        <a href="/activities/festivals">Festivals</a>
+                        <a href="/activities/social-workshops">Social Activities & Workshops</a>
+                    </div>
+                </li>
+
+                <li><a href="/events-calendar">Events Calendar 2026</a></li>
+
+                <li class="dropdown">
+                    <a href="#">Subscription ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/subscribe/member">Member's Subscription</a>
+                        <a href="/subscribe/other">Other Subscription / Donation</a>
+                    </div>
+                </li>
+
+                <li><a href="/contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Biswarup Chakraborty. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

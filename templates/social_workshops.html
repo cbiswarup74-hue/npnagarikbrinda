@@ -1,0 +1,554 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Google Font for Bengali Typography & Custom Styling -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Full-Bleed Deep Cream Background */
+    html, body {
+        background-color: #f5efe6 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .workshops-page-wrapper {
+        background-color: #f5efe6;
+        min-height: 100vh;
+        padding: 3rem 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .workshops-container {
+        max-width: 1250px;
+        margin: 0 auto;
+    }
+
+    .hero-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .hero-header h1 {
+        font-weight: 800;
+        color: #3d2c1e;
+        font-size: 2.8rem;
+    }
+
+    .hero-header p {
+        color: #1e293b;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Workshop Card Styling */
+    .workshop-card {
+        background: #fffdfa;
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(61, 44, 30, 0.08);
+        border: 1px solid #e6dcd0;
+        padding: 2.5rem;
+        margin-bottom: 3.5rem;
+    }
+
+    /* Sub-Category Navigation Tabs for Workshops */
+    .workshop-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .tab-btn {
+        background-color: #e2d8cd;
+        color: #3d2c1e;
+        border: none;
+        padding: 0.75rem 1.8rem;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+        background-color: #0284c7;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Side-by-Side Dashboard Layout */
+    .workshop-dashboard-layout {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.5rem;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Left Side: Hanging Pinned Board Photo Stack Styling */
+    .pinboard-container {
+        flex: 1 1 420px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem 0;
+    }
+
+    .pinned-photo-card {
+        position: relative;
+        background: #ffffff;
+        padding: 12px 12px 20px 12px;
+        border-radius: 6px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.18), 0 5px 15px rgba(0,0,0,0.08);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 380px;
+        width: 100%;
+        transform: rotate(-2deg);
+    }
+
+    .pinned-photo-card:hover {
+        transform: rotate(0deg) scale(1.04);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    .pinned-photo-card::before, .pinned-photo-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        border-radius: 6px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        z-index: -1;
+    }
+
+    .pinned-photo-card::before { transform: rotate(4deg); background: #f8fafc; }
+    .pinned-photo-card::after { transform: rotate(-4deg); background: #f1f5f9; }
+
+    /* Metallic Thumbtack / Hanging Pin Effect */
+    .pin-head {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 24px;
+        background: radial-gradient(circle at 30% 30%, #0284c7, #0369a1);
+        border-radius: 50%;
+        box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+        z-index: 10;
+    }
+
+    .pin-head::after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 5px;
+        width: 6px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+    }
+
+    .pinned-photo-img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        border-radius: 4px;
+        display: block;
+    }
+
+    .pinned-note-badge {
+        margin-top: 14px;
+        background: #fef08a;
+        color: #854d0e;
+        border: 1px dashed #ca8a04;
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 800;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Right Side: Event Notes Board */
+    .notes-board-wrapper {
+        flex: 1 1 450px;
+        background: #fefcf8;
+        border: 1px solid #e2d8cd;
+        border-left: 6px solid #0284c7;
+        border-radius: 14px;
+        padding: 2rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .notes-header {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #0284c7;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .notes-content {
+        color: #3d2c1e;
+        font-size: 1.05rem;
+        line-height: 1.7;
+    }
+
+    .notes-list {
+        margin-top: 1rem;
+        padding-left: 1.2rem;
+    }
+
+    .notes-list li {
+        margin-bottom: 0.8rem;
+        font-weight: 500;
+    }
+
+    .badge-tag {
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+
+    /* Fullscreen Lightbox Gallery Modal */
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(15, 23, 42, 0.95);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .lightbox-img-wrapper {
+        position: relative;
+        max-width: 90%;
+        max-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .lightbox img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 8px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        object-fit: contain;
+    }
+
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        padding: 10px 18px;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+        user-select: none;
+    }
+
+    .lightbox-nav:hover { background: rgba(255,255,255,0.4); }
+    .lightbox-prev { left: -60px; }
+    .lightbox-next { right: -60px; }
+
+    .lightbox-close {
+        position: absolute;
+        top: 25px;
+        right: 35px;
+        color: white;
+        font-size: 3rem;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .lightbox-counter {
+        color: #94a3b8;
+        margin-top: 15px;
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    @media (max-width: 768px) {
+        .lightbox-prev { left: 10px; }
+        .lightbox-next { right: 10px; }
+    }
+</style>
+
+<div class="workshops-page-wrapper">
+    <div class="workshops-container">
+        
+        <div class="hero-header">
+            <h1>Social Activities & Workshops</h1>
+            <p>Empowering our youth, fostering creative talent, and driving civic welfare initiatives at Neogi Para.</p>
+        </div>
+
+        <!-- CARD 1: WORKSHOPS (WITH SUB-CATEGORIES) -->
+        <div class="workshop-card">
+            
+            <!-- Sub-category Selection Tabs -->
+            <div class="workshop-tabs">
+                <button class="tab-btn active" onclick="switchWorkshopTab('sit-draw')">🎨 Sit & Draw Competition</button>
+                <button class="tab-btn" onclick="switchWorkshopTab('yoga')">🧘 Yoga & Wellness Workshop</button>
+            </div>
+
+            <!-- Sub Category A: Sit & Draw -->
+            <div id="sit-draw-tab" class="tab-content active">
+                <div class="workshop-dashboard-layout">
+                    <!-- Left Side: Hanging Photo Stack -->
+                    <div class="pinboard-container">
+                        <div class="pinned-photo-card" onclick="openWorkshopGallery('draw')">
+                            <div class="pin-head"></div>
+                            <img src="{{ url_for('static', filename='images/draw_1.jpeg') }}" class="pinned-photo-img" alt="Sit and Draw Preview">
+                            <div class="pinned-note-badge">
+                                <span>📌 Click here to see all 25 photos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Description Board -->
+                    <div class="notes-board-wrapper">
+                        <div class="notes-header">
+                            <span>🎨 Sit & Draw Competition</span>
+                            <span class="badge-tag">Youth & Children</span>
+                        </div>
+                        <p class="notes-content">
+                            Annual drawing and painting workshops designed for young talent across the neighborhood to express their imagination and creativity.
+                        </p>
+                        <ul class="notes-list notes-content">
+                            <li><strong>Multiple Age Groups:</strong> Tailored categories ranging from toddlers to senior school students.</li>
+                            <li><strong>Art Supplies Provided:</strong> Canvas sheets and drawing kits distributed to all participants.</li>
+                            <li><strong>Certificates & Prizes:</strong> Felicitations, trophies, and participation certificates awarded at the finale.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub Category B: Yoga -->
+            <div id="yoga-tab" class="tab-content">
+                <div class="workshop-dashboard-layout">
+                    <!-- Left Side: Hanging Photo Stack -->
+                    <div class="pinboard-container">
+                        <div class="pinned-photo-card" style="transform: rotate(2deg);" onclick="openWorkshopGallery('yoga')">
+                            <div class="pin-head" style="background: radial-gradient(circle at 30% 30%, #10b981, #047857);"></div>
+                            <img src="{{ url_for('static', filename='images/yoga_1.jpeg') }}" class="pinned-photo-img" alt="Yoga Workshop Preview">
+                            <div class="pinned-note-badge" style="background: #dcfce7; border-color: #16a34a; color: #14532d;">
+                                <span>📌 Click here to see all 10 photos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Description Board -->
+                    <div class="notes-board-wrapper" style="border-left-color: #10b981;">
+                        <div class="notes-header" style="color: #059669;">
+                            <span>🧘 Yoga & Wellness Sessions</span>
+                            <span class="badge-tag" style="background-color: #d1fae5; color: #047857;">Health & Fitness</span>
+                        </div>
+                        <p class="notes-content">
+                            Community health awareness programs and guided yoga sessions conducted by certified instructors for physical and mental well-being.
+                        </p>
+                        <ul class="notes-list notes-content">
+                            <li><strong>Pranayama & Meditation:</strong> Mindful breathing exercises tailored for stress relief and focus.</li>
+                            <li><strong>All-Age Inclusivity:</strong> Specialized gentle posture routines for senior citizens and beginners.</li>
+                            <li><strong>Health Guidance:</strong> Daily wellness tips and dietary counseling shared during session breaks.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CARD 2: GENERAL COMMUNITY MEETINGS -->
+        <div class="workshop-card">
+            <div class="workshop-dashboard-layout">
+                <!-- Left Side: Hanging Photo Stack -->
+                <div class="pinboard-container">
+                    <div class="pinned-photo-card" style="transform: rotate(-3deg);" onclick="openWorkshopGallery('community')">
+                        <div class="pin-head" style="background: radial-gradient(circle at 30% 30%, #f59e0b, #b45309);"></div>
+                        <img src="{{ url_for('static', filename='images/community_1.jpeg') }}" class="pinned-photo-img" alt="Community Meetings Preview">
+                        <div class="pinned-note-badge" style="background: #fef3c7; border-color: #d97706; color: #78350f;">
+                            <span>📌 Click here to see all 10 photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Description Board -->
+                <div class="notes-board-wrapper" style="border-left-color: #f59e0b;">
+                    <div class="notes-header" style="color: #d97706;">
+                        <span>🏛️ General Community Meetings</span>
+                        <span class="badge-tag" style="background-color: #fef3c7; color: #b45309;">Civic Welfare</span>
+                    </div>
+                    <p class="notes-content">
+                        Open town-hall forums for neighborhood residents to discuss local developments, security, infrastructure updates, and upcoming festive plans.
+                    </p>
+                    <ul class="notes-list notes-content">
+                        <li><strong>Neighborhood Infrastructure:</strong> Collaborative discussions regarding road maintenance, lighting, and cleanliness.</li>
+                        <li><strong>Resident Welfare & Security:</strong> Planning safety initiatives, health camps, and neighborhood support networks.</li>
+                        <li><strong>Cultural Event Planning:</strong> Transparent budget reviews and volunteer coordination for major annual celebrations.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Interactive Fullscreen Lightbox Gallery Modal -->
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    
+    <div class="lightbox-img-wrapper">
+        <button class="lightbox-nav lightbox-prev" onclick="changePhoto(-1)">&#10094;</button>
+        <img id="lightbox-img" src="" alt="Enlarged View">
+        <button class="lightbox-nav lightbox-next" onclick="changePhoto(1)">&#10095;</button>
+    </div>
+    
+    <div id="lightbox-counter" class="lightbox-counter">1 of 25</div>
+</div>
+
+<script>
+    // Tab Switch Logic for Card 1 Workshops
+    function switchWorkshopTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        if (tabName === 'sit-draw') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('sit-draw-tab').classList.add('active');
+        } else if (tabName === 'yoga') {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('yoga-tab').classList.add('active');
+        }
+    }
+
+    // Lightbox Datasets for Sit & Draw (25), Yoga (10), Community (10)
+    const galleryDatasets = {
+        'draw': [
+            "{{ url_for('static', filename='images/draw_1.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_2.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_3.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_4.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_5.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_6.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_7.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_8.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_9.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_10.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_11.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_12.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_13.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_14.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_15.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_16.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_17.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_18.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_19.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_20.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_21.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_22.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_23.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_24.jpeg') }}",
+            "{{ url_for('static', filename='images/draw_25.jpeg') }}"
+        ],
+        'yoga': [
+            "{{ url_for('static', filename='images/yoga_1.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_2.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_3.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_4.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_5.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_6.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_7.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_8.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_9.jpeg') }}",
+            "{{ url_for('static', filename='images/yoga_10.jpeg') }}"
+        ],
+        'community': [
+            "{{ url_for('static', filename='images/community_1.jpeg') }}",
+            "{{ url_for('static', filename='images/community_2.jpeg') }}",
+            "{{ url_for('static', filename='images/community_3.jpeg') }}",
+            "{{ url_for('static', filename='images/community_4.jpeg') }}",
+            "{{ url_for('static', filename='images/community_5.jpeg') }}",
+            "{{ url_for('static', filename='images/community_6.jpeg') }}",
+            "{{ url_for('static', filename='images/community_7.jpeg') }}",
+            "{{ url_for('static', filename='images/community_8.jpeg') }}",
+            "{{ url_for('static', filename='images/community_9.jpeg') }}",
+            "{{ url_for('static', filename='images/community_10.jpeg') }}"
+        ]
+    };
+
+    let currentGallery = [];
+    let currentIndex = 0;
+
+    function openWorkshopGallery(category) {
+        currentGallery = galleryDatasets[category];
+        currentIndex = 0;
+        updateLightboxView();
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    function updateLightboxView() {
+        document.getElementById('lightbox-img').src = currentGallery[currentIndex];
+        document.getElementById('lightbox-counter').innerText = `${currentIndex + 1} of ${currentGallery.length}`;
+    }
+
+    function changePhoto(direction) {
+        if (currentGallery.length <= 1) return;
+        currentIndex = (currentIndex + direction + currentGallery.length) % currentGallery.length;
+        updateLightboxView();
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('lightbox').style.display === 'flex') {
+            if (e.key === 'ArrowRight') changePhoto(1);
+            if (e.key === 'ArrowLeft') changePhoto(-1);
+            if (e.key === 'Escape') closeLightbox();
+        }
+    });
+
+    // Close on backdrop click
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+    });
+</script>
+{% endblock %}

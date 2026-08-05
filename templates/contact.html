@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .contact-wrapper {
+        padding: 3rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .contact-title {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+    .contact-title h1 {
+        font-weight: 800;
+        color: #0f172a;
+        font-size: 2.5rem;
+    }
+    .contact-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        border: 1px solid #e2e8f0;
+        padding: 2.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #334155;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+    .btn-submit {
+        background-color: #0284c7;
+        color: #ffffff;
+        border: none;
+        padding: 0.85rem 1.75rem;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.2s ease;
+    }
+    .btn-submit:hover {
+        background-color: #0369a1;
+    }
+    .club-info-title {
+        color: #0f172a;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .info-item {
+        margin-bottom: 1.25rem;
+        color: #475569;
+        line-height: 1.6;
+    }
+    .info-item strong {
+        color: #0f172a;
+    }
+    .map-container {
+        margin-top: 1.5rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #cbd5e1;
+    }
+</style>
+
+<div class="contact-wrapper">
+    <div class="contact-title">
+        <h1>Contact Us</h1>
+        <p class="text-muted">We would love to hear from you. Send us a message or visit us.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Half: Contact Form -->
+        <div class="col-lg-6">
+            <div class="contact-card h-100">
+                <h3 class="mb-4 text-dark font-weight-bold">Send Us a Message</h3>
+                <form action="https://formsubmit.co/contact@neogiparanagarikbrinda.org" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="text-danger">*</span></label>
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter 10-digit mobile number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" placeholder="Write your message here..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Submit Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Half: Club Details & Google Map -->
+        <div class="col-lg-6">
+            <div class="contact-card h-100">
+                <div class="club-info-title">Neogi Para Nagarikbrinda</div>
+                
+                <div class="info-item">
+                    <strong>Address:</strong><br>
+                    119A, Neogi Para Road, Baranagar, Kolkata - 700036
+                </div>
+
+                <div class="info-item">
+                    <strong>Email:</strong><br>
+                    nagarikbrinda.neogipara@gmail.com
+                </div>
+
+                <!-- Google Map Embed -->
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3682.4385108252277!2d88.37128527589886!3d22.637424130607996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f89db965aa301b%3A0xb3bd38c5b0df145!2sNeogi%20Para%20Rd%2C%20Baranagar%2C%20Kolkata%2C%20West%20Bengal%20700036!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                        width="100%" 
+                        height="260" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

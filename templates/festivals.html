@@ -1,0 +1,594 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Google Font for Bengali Typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Full-Bleed Background */
+    html, body {
+        background-color: #f5efe6 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .festivals-page-wrapper {
+        background-color: #f5efe6;
+        min-height: 100vh;
+        padding: 3rem 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .festivals-container {
+        max-width: 1250px;
+        margin: 0 auto;
+    }
+
+    .hero-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .hero-header h1 {
+        font-weight: 800;
+        color: #3d2c1e;
+        font-size: 2.8rem;
+    }
+
+    .hero-header p {
+        color: #1e293b;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Backdrop Banners */
+    .festival-backdrop-banner {
+        position: relative;
+        width: 100%;
+        min-height: 300px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 2px solid #e6dcd0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .durga-backdrop {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), 
+                          url("{{ url_for('static', filename='images/durga_backdrop.jpeg') }}");
+        background-position: top center;
+    }
+
+    .kali-backdrop {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                          url("{{ url_for('static', filename='images/kali_backdrop.jpeg') }}");
+        background-position: top center;
+    }
+
+    .banner-overlay-text {
+        font-family: 'Mina', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 12px rgba(2, 132, 199, 0.6);
+        text-align: center;
+        letter-spacing: 0.5px;
+    }
+
+    /* Standalone Line for Dol Utsav */
+    .dol-standalone-line {
+        font-family: 'Mina', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #db2777;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .festival-card {
+        background: #fffdfa;
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(61, 44, 30, 0.08);
+        border: 1px solid #e6dcd0;
+        padding: 2.5rem;
+        margin-bottom: 3.5rem;
+    }
+
+    /* Side-by-Side Dashboard Layout */
+    .festival-dashboard-layout {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.5rem;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Left Side: Pinned Board Photo Stack Styling */
+    .pinboard-container {
+        flex: 1 1 420px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem 0;
+    }
+
+    .pinned-photo-card {
+        position: relative;
+        background: #ffffff;
+        padding: 12px 12px 20px 12px;
+        border-radius: 6px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.18), 0 5px 15px rgba(0,0,0,0.08);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 380px;
+        width: 100%;
+        transform: rotate(-2deg);
+    }
+
+    .pinned-photo-card:hover {
+        transform: rotate(0deg) scale(1.04);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    .pinned-photo-card::before, .pinned-photo-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        border-radius: 6px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        z-index: -1;
+    }
+
+    .pinned-photo-card::before { transform: rotate(4deg); background: #f8fafc; }
+    .pinned-photo-card::after { transform: rotate(-4deg); background: #f1f5f9; }
+
+    .pin-head {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 24px;
+        background: radial-gradient(circle at 30% 30%, #ef4444, #991b1b);
+        border-radius: 50%;
+        box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+        z-index: 10;
+    }
+
+    .pin-head::after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 5px;
+        width: 6px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+    }
+
+    .pinned-photo-img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        border-radius: 4px;
+        display: block;
+    }
+
+    .pinned-note-badge {
+        margin-top: 14px;
+        background: #fef08a;
+        color: #854d0e;
+        border: 1px dashed #ca8a04;
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 800;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Right Side: Event Notes Board */
+    .notes-board-wrapper {
+        flex: 1 1 450px;
+        background: #fefcf8;
+        border: 1px solid #e2d8cd;
+        border-left: 6px solid #0284c7;
+        border-radius: 14px;
+        padding: 2rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .notes-header {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #0284c7;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .notes-content {
+        color: #3d2c1e;
+        font-size: 1.05rem;
+        line-height: 1.7;
+    }
+
+    .notes-list {
+        margin-top: 1rem;
+        padding-left: 1.2rem;
+    }
+
+    .notes-list li {
+        margin-bottom: 0.8rem;
+        font-weight: 500;
+    }
+
+    .badge-tag {
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+
+    /* -------------------------------------------------------------
+       DOL UTSAV: HIGH-FOCUS SHARP BACKDROP & CRISP NOTES BOARD
+       ------------------------------------------------------------- */
+    .dol-vibrant-card {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 3px solid #ec4899;
+        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.2);
+        padding: 2.5rem;
+        margin-bottom: 3.5rem;
+        
+        /* Crisp photo backdrop with minimal overlay tint */
+        background: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)),
+                    url("{{ url_for('static', filename='images/dol_backdrop.jpeg') }}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    /* Solid White Card with Soft Shadow to keep photo focused & text legible */
+    .dol-notes-board {
+        border-left: 6px solid #db2777 !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 14px;
+        padding: 2rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+    }
+
+    .color-dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+    .dot-red { background-color: #ef4444; }
+    .dot-yellow { background-color: #eab308; }
+    .dot-blue { background-color: #3b82f6; }
+    .dot-pink { background-color: #ec4899; }
+
+    /* Fullscreen Lightbox Gallery Modal */
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(15, 23, 42, 0.95);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .lightbox-img-wrapper {
+        position: relative;
+        max-width: 90%;
+        max-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .lightbox img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 8px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        object-fit: contain;
+    }
+
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        padding: 10px 18px;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+        user-select: none;
+    }
+
+    .lightbox-nav:hover { background: rgba(255,255,255,0.4); }
+    .lightbox-prev { left: -60px; }
+    .lightbox-next { right: -60px; }
+
+    .lightbox-close {
+        position: absolute;
+        top: 25px;
+        right: 35px;
+        color: white;
+        font-size: 3rem;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .lightbox-counter {
+        color: #94a3b8;
+        margin-top: 15px;
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    @media (max-width: 768px) {
+        .lightbox-prev { left: 10px; }
+        .lightbox-next { right: 10px; }
+    }
+</style>
+
+<div class="festivals-page-wrapper">
+    <div class="festivals-container">
+        
+        <div class="hero-header">
+            <h1>Festivals & Celebrations</h1>
+            <p>Highlights of rich cultural traditions, festive moments, and community celebrations at Neogi Para.</p>
+        </div>
+
+        <!-- 1. SHARODOTSAV (DURGA PUJA) -->
+        <div class="festival-card">
+            <div class="festival-backdrop-banner durga-backdrop">
+                <div class="banner-overlay-text">
+                    অসতো মা সদ্‌গময়, তমসো মা জ্যোতির্গময়..
+                </div>
+            </div>
+
+            <div class="festival-dashboard-layout">
+                <div class="pinboard-container">
+                    <div class="pinned-photo-card" onclick="openCategoryGallery('durga')">
+                        <div class="pin-head"></div>
+                        <img src="{{ url_for('static', filename='images/durga_1.jpeg') }}" class="pinned-photo-img" alt="Sharodotsav Stack Preview">
+                        <div class="pinned-note-badge">
+                            <span>📌 Click here to see all 10 photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notes-board-wrapper">
+                    <div class="notes-header">
+                        <span>ॐ Sharodotsav Notes</span>
+                        <span class="badge-tag">Grand Event</span>
+                    </div>
+                    <p class="notes-content">
+                        Our flagship socio-cultural celebration brings together residents across all generations with warmth, devotion, and festive joy.
+                    </p>
+                    <ul class="notes-list notes-content">
+                        <li><strong>Chaturthi Cultural Evening:</strong> Inaugurated with vibrant musical, dance, and drama performances by neighborhood residents.</li>
+                        <li><strong>Bijoya Dashami & Baran Utsav:</strong> Traditional Sindoor Khela, auspicious Debi Baran rituals, and heartfelt exchange of Bijoya greetings.</li>
+                        <li><strong>Community Feast:</strong> A special get-together organized a few days after Dashami, where all members gather to enjoy delicious bhog and meals together.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. SHYAMA PUJA & KALI PUJA -->
+        <div class="festival-card">
+            <div class="festival-backdrop-banner kali-backdrop">
+                <div class="banner-overlay-text">
+                    শক্তি-রূপেণ সংস্থিতা..
+                </div>
+            </div>
+
+            <div class="festival-dashboard-layout">
+                <div class="pinboard-container">
+                    <div class="pinned-photo-card" style="transform: rotate(3deg);" onclick="openCategoryGallery('kali')">
+                        <div class="pin-head"></div>
+                        <img src="{{ url_for('static', filename='images/kali_1.jpeg') }}" class="pinned-photo-img" alt="Kali Puja Stack Preview">
+                        <div class="pinned-note-badge">
+                            <span>📌 Click here to see all 10 photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notes-board-wrapper">
+                    <div class="notes-header">
+                        <span>🪔 Shyama Puja & Diwali</span>
+                        <span class="badge-tag">Autumn Illuminations</span>
+                    </div>
+                    <p class="notes-content">
+                        The festival of lights was celebrated with traditional grandeur and luminous enthusiasm across Neogi Para.
+                    </p>
+                    <ul class="notes-list notes-content">
+                        <li><strong>Diwali & Midnight Puja:</strong> Conducted sacred midnight Shyama Puja worship amidst solemn chants and diya illuminations.</li>
+                        <li><strong>Fire Crackers & Celebrations:</strong> The neighborhood lit up with colorful fireworks, sparkles, and oil lamps, sharing sweets and joy with every household.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. DOL UTSAV / BASANTA UTSAV -->
+        <div class="festival-card dol-vibrant-card">
+            
+            <div class="dol-standalone-line">
+                বসন্তে ফুল গাঁথল আমার জয়ের মালা...
+            </div>
+
+            <div class="festival-dashboard-layout">
+                <!-- Left Side: Interactive Pinned Stack over Backdrop -->
+                <div class="pinboard-container">
+                    <div class="pinned-photo-card" style="transform: rotate(-3deg);" onclick="openCategoryGallery('dol')">
+                        <div class="pin-head"></div>
+                        <img src="{{ url_for('static', filename='images/dol_1.jpeg') }}" class="pinned-photo-img" alt="Dol Utsav Stack Preview">
+                        <div class="pinned-note-badge" style="background: #fef08a; border-color: #eab308;">
+                            <span>📌 Click here to see all 10 photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Sharp, Crisp Event Notes over Focused Backdrop -->
+                <div class="notes-board-wrapper dol-notes-board">
+                    <div class="notes-header" style="color: #db2777;">
+                        <span>🌸 Dol Utsav & Basanta Utsav</span>
+                        <span class="badge-tag" style="background-color: #fce7f3; color: #db2777;">Spring Festival</span>
+                    </div>
+                    <p class="notes-content">
+                        A colorful celebration welcoming spring with melody, laughter, and community fellowship.
+                    </p>
+                    <ul class="notes-list notes-content">
+                        <li>
+                            <span class="color-dot dot-pink"></span>
+                            <span class="color-dot dot-yellow"></span>
+                            <span class="color-dot dot-blue"></span>
+                            <span class="color-dot dot-red"></span>
+                            <strong>Splash & Splatter of Colors:</strong> Celebrated with vibrant dry abir in shades of red, yellow, pink, and blue exchanged among all members.
+                        </li>
+                        <li>
+                            <span class="color-dot dot-blue"></span>
+                            <strong>Songs & Rabindra Sangeet:</strong> Morning Prabhat Pheri recitals and chorus songs celebrating spring.
+                        </li>
+                        <li>
+                            <span class="color-dot dot-red"></span>
+                            <strong>Sweets & Shared Joy:</strong> Distribution of traditional sweets, snacks, and warm festive wishes across the community.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Interactive Fullscreen Lightbox Gallery Modal -->
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    
+    <div class="lightbox-img-wrapper">
+        <button class="lightbox-nav lightbox-prev" onclick="changePhoto(-1)">&#10094;</button>
+        <img id="lightbox-img" src="" alt="Enlarged Festival View">
+        <button class="lightbox-nav lightbox-next" onclick="changePhoto(1)">&#10095;</button>
+    </div>
+    
+    <div id="lightbox-counter" class="lightbox-counter">1 of 10</div>
+</div>
+
+<script>
+    // Lightbox Datasets for each festival section
+    const festivalGalleries = {
+        'durga': [
+            "{{ url_for('static', filename='images/durga_1.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_2.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_3.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_4.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_5.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_6.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_7.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_8.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_9.jpeg') }}",
+            "{{ url_for('static', filename='images/durga_10.jpeg') }}"
+        ],
+        'kali': [
+            "{{ url_for('static', filename='images/kali_1.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_2.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_3.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_4.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_5.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_6.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_7.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_8.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_9.jpeg') }}",
+            "{{ url_for('static', filename='images/kali_10.jpeg') }}"
+        ],
+        'dol': [
+            "{{ url_for('static', filename='images/dol_1.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_2.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_3.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_4.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_5.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_6.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_7.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_8.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_9.jpeg') }}",
+            "{{ url_for('static', filename='images/dol_10.jpeg') }}"
+        ]
+    };
+
+    let currentGallery = [];
+    let currentIndex = 0;
+
+    function openCategoryGallery(category) {
+        currentGallery = festivalGalleries[category];
+        currentIndex = 0;
+        updateLightboxView();
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    function updateLightboxView() {
+        document.getElementById('lightbox-img').src = currentGallery[currentIndex];
+        document.getElementById('lightbox-counter').innerText = `${currentIndex + 1} of ${currentGallery.length}`;
+    }
+
+    function changePhoto(direction) {
+        if (currentGallery.length <= 1) return;
+        currentIndex = (currentIndex + direction + currentGallery.length) % currentGallery.length;
+        updateLightboxView();
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('lightbox').style.display === 'flex') {
+            if (e.key === 'ArrowRight') changePhoto(1);
+            if (e.key === 'ArrowLeft') changePhoto(-1);
+            if (e.key === 'Escape') closeLightbox();
+        }
+    });
+
+    // Backdrop click close
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+    });
+</script>
+{% endblock %}

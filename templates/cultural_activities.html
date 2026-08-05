@@ -1,0 +1,499 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Full-Bleed Warm Cream Background */
+    html, body {
+        background-color: #fffbeb !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .cultural-page-wrapper {
+        background-color: #fffbeb;
+        min-height: 100vh;
+        padding: 2.5rem 2rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+        position: relative;
+        background: linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.55)), 
+                    url('/static/images/rn_sandhya/photo7.jpeg');
+        background-size: cover;
+        background-position: center 12%;
+        color: #ffffff;
+        padding: 4.5rem 2rem;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-banner h1 {
+        font-size: 3.2rem;
+        font-weight: 800;
+        margin-bottom: 0.8rem;
+        color: #fbbf24;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.95);
+    }
+
+    .hero-banner p.sub-lead {
+        font-size: 1.2rem;
+        max-width: 850px;
+        margin: 0 auto 1.5rem auto;
+        color: #ffffff;
+        line-height: 1.6;
+        font-style: italic;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.95);
+    }
+
+    .tagline-badge {
+        display: inline-block;
+        background: rgba(15, 23, 42, 0.88);
+        color: #fbbf24;
+        border: 1.5px solid #fbbf24;
+        padding: 0.6rem 1.6rem;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 1. ARTISTIC BRUSH COLOR SPLASH CARD (PHOTO 1) */
+    .featured-card {
+        display: flex;
+        flex-wrap: wrap;
+        background: #ffffff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        border: 1px solid #f1f5f9;
+        margin-bottom: 3.5rem;
+        position: relative;
+    }
+
+    .featured-card .featured-img {
+        flex: 1 1 420px;
+        max-height: 400px;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .featured-card .featured-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .featured-card .featured-img:hover img {
+        transform: scale(1.04);
+    }
+
+    .featured-card .featured-body {
+        flex: 1 1 380px;
+        padding: 3rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background-color: #ffffff;
+    }
+
+    /* Random Brush Splashes (Green, Maroon, Indigo) */
+    .splash-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.18;
+        z-index: 1;
+    }
+
+    .featured-body-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .featured-card blockquote {
+        font-size: 1.35rem;
+        font-weight: 700;
+        font-style: italic;
+        color: #800020; /* Deep Maroon */
+        line-height: 1.7;
+        margin: 0 0 1rem 0;
+        border-left: 5px solid #312e81; /* Indigo Accent */
+        padding-left: 1.2rem;
+    }
+
+    .featured-card p.author {
+        font-weight: 800;
+        color: #059669; /* Emerald Green */
+        font-size: 1.05rem;
+        margin: 0;
+        padding-left: 1.2rem;
+    }
+
+    /* Section Headings */
+    .section-title {
+        border-left: 5px solid #800020;
+        padding-left: 1.2rem;
+        margin: 3.5rem 0 2rem 0;
+    }
+
+    .section-title h2 {
+        font-size: 1.8rem;
+        color: #0f172a;
+        margin: 0;
+        font-weight: 800;
+    }
+
+    .section-title p {
+        color: #475569;
+        margin: 0.4rem 0 0 0;
+        font-style: italic;
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+
+    /* 2. PINNED BOARD PHOTO STACK STYLING */
+    .pinboard-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem 0 2.5rem 0;
+    }
+
+    .pinned-photo-card {
+        position: relative;
+        background: #ffffff;
+        padding: 12px 12px 20px 12px;
+        border-radius: 6px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.18), 0 5px 15px rgba(0,0,0,0.08);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 380px;
+        width: 100%;
+        transform: rotate(-2deg);
+    }
+
+    .pinned-photo-card:hover {
+        transform: rotate(0deg) scale(1.03);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    /* Simulated Stacked Photos Underneath */
+    .pinned-photo-card::before, .pinned-photo-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        border-radius: 6px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        z-index: -1;
+    }
+
+    .pinned-photo-card::before {
+        transform: rotate(4deg);
+        background: #f8fafc;
+    }
+
+    .pinned-photo-card::after {
+        transform: rotate(-4deg);
+        background: #f1f5f9;
+    }
+
+    /* Metallic Thumbtack / Pin Effect */
+    .pin-head {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 24px;
+        background: radial-gradient(circle at 30% 30%, #ef4444, #991b1b);
+        border-radius: 50%;
+        box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+        z-index: 10;
+    }
+
+    .pin-head::after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 5px;
+        width: 6px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+    }
+
+    .pinned-photo-img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 4px;
+        display: block;
+    }
+
+    /* Note Badge attached to pinned card */
+    .pinned-note-badge {
+        margin-top: 14px;
+        background: #fef08a; /* Sticky Note Yellow */
+        color: #854d0e;
+        border: 1px dashed #ca8a04;
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 800;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Fullscreen Gallery Lightbox Modal */
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(15, 23, 42, 0.95);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .lightbox-img-wrapper {
+        position: relative;
+        max-width: 90%;
+        max-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .lightbox img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 8px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        padding: 10px 18px;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+        user-select: none;
+    }
+
+    .lightbox-nav:hover {
+        background: rgba(255,255,255,0.4);
+    }
+
+    .lightbox-prev { left: -60px; }
+    .lightbox-next { right: -60px; }
+
+    .lightbox-close {
+        position: absolute;
+        top: 25px;
+        right: 35px;
+        color: white;
+        font-size: 3rem;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .lightbox-counter {
+        color: #94a3b8;
+        margin-top: 15px;
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    @media (max-width: 768px) {
+        .lightbox-prev { left: 10px; }
+        .lightbox-next { right: 10px; }
+    }
+</style>
+
+<div class="cultural-page-wrapper">
+    <div class="page-container">
+
+        <!-- Hero Section -->
+        <div class="hero-banner">
+            <h1>Rabindra-Nazrul Sandhya</h1>
+            <p class="sub-lead">"Where the harmony of Tagore meets the passion of Nazrul. Celebrating the eternal voices of Bengali art, literature, and unity."</p>
+            <span class="tagline-badge">Two cosmic spirits, one cultural heritage</span>
+        </div>
+
+        <!-- 1. Featured Photo 1 Card with Brush Splashes -->
+        <div class="featured-card">
+            <div class="featured-img" onclick="openSinglePhoto('/static/images/rn_sandhya/photo1.jpeg')">
+                <img src="/static/images/rn_sandhya/photo1.jpeg" alt="Rabindra-Nazrul Sandhya Feature Photo">
+            </div>
+            <div class="featured-body">
+                <!-- SVG Brush Splashes Background (Green, Maroon, Indigo) -->
+                <svg class="splash-bg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Maroon Splash -->
+                    <path d="M 80,100 C 150,40 220,120 320,60 C 400,120 380,220 300,280 C 220,320 120,280 80,200 Z" fill="#800020"/>
+                    <!-- Indigo Splash -->
+                    <path d="M 200,220 C 300,180 380,260 450,220 C 480,320 420,420 320,440 C 220,460 180,360 200,220 Z" fill="#312e81"/>
+                    <!-- Emerald Green Splash -->
+                    <path d="M 30,300 C 100,250 180,320 220,380 C 180,460 80,480 30,420 C -20,360 -10,320 30,300 Z" fill="#059669"/>
+                </svg>
+
+                <div class="featured-body-content">
+                    <blockquote>
+                        "Faith is the bird that feels the light when the dawn is still dark."
+                    </blockquote>
+                    <p class="author">— Rabindranath Tagore</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Felicitation Section (Pinned Photo Board Stack) -->
+        <div class="section-title">
+            <h2>Felicitation of Our Honorable Guests</h2>
+            <p>"Honouring our distinguished guests and dignitaries for their presence and encouragement."</p>
+        </div>
+
+        <div class="pinboard-container">
+            <div class="pinned-photo-card" onclick="openCategoryGallery('felicitation')">
+                <div class="pin-head"></div>
+                <img src="/static/images/rn_sandhya/photo6.jpeg" class="pinned-photo-img" alt="Felicitation Stack Preview">
+                <div class="pinned-note-badge">
+                    <span>📌 Click here to see all photos</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Moments of Celebration Section (Pinned Photo Board Stack) -->
+        <div class="section-title">
+            <h2>Moments of Celebration</h2>
+            <p>"Glimpses of performances, joyous gatherings, and musical memories from the evening."</p>
+        </div>
+
+        <div class="pinboard-container">
+            <div class="pinned-photo-card" style="transform: rotate(3deg);" onclick="openCategoryGallery('celebration')">
+                <div class="pin-head"></div>
+                <img src="/static/images/rn_sandhya/photo2.jpeg" class="pinned-photo-img" alt="Celebration Moments Stack Preview">
+                <div class="pinned-note-badge">
+                    <span>📌 Click here to see all photos</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Interactive Fullscreen Lightbox Gallery -->
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    
+    <div class="lightbox-img-wrapper">
+        <button class="lightbox-nav lightbox-prev" onclick="changePhoto(-1)">&#10094;</button>
+        <img id="lightbox-img" src="" alt="Enlarged View">
+        <button class="lightbox-nav lightbox-next" onclick="changePhoto(1)">&#10095;</button>
+    </div>
+    
+    <div id="lightbox-counter" class="lightbox-counter">1 of 1</div>
+</div>
+
+<script>
+    // Gallery Datasets
+    const galleries = {
+        'felicitation': [
+            '/static/images/rn_sandhya/photo6.jpeg',
+            '/static/images/rn_sandhya/photo8.jpeg',
+            '/static/images/rn_sandhya/photo16.jpeg',
+            '/static/images/rn_sandhya/photo17.jpeg'
+        ],
+        'celebration': [
+            {% for i in range(1, 31) %}
+                {% if i not in [1, 6, 8, 16, 17] %}
+                    '/static/images/rn_sandhya/photo{{ i }}.jpeg',
+                {% endif %}
+            {% endfor %}
+        ]
+    };
+
+    let currentGallery = [];
+    let currentIndex = 0;
+
+    function openCategoryGallery(category) {
+        currentGallery = galleries[category];
+        currentIndex = 0;
+        updateLightboxView();
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    function openSinglePhoto(src) {
+        currentGallery = [src];
+        currentIndex = 0;
+        updateLightboxView();
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    function updateLightboxView() {
+        document.getElementById('lightbox-img').src = currentGallery[currentIndex];
+        document.getElementById('lightbox-counter').innerText = `${currentIndex + 1} of ${currentGallery.length}`;
+        
+        // Hide nav arrows if single photo
+        const navBtns = document.querySelectorAll('.lightbox-nav');
+        navBtns.forEach(btn => btn.style.display = currentGallery.length > 1 ? 'block' : 'none');
+    }
+
+    function changePhoto(direction) {
+        if (currentGallery.length <= 1) return;
+        currentIndex = (currentIndex + direction + currentGallery.length) % currentGallery.length;
+        updateLightboxView();
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
+    // Keyboard Arrow Navigation
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('lightbox').style.display === 'flex') {
+            if (e.key === 'ArrowRight') changePhoto(1);
+            if (e.key === 'ArrowLeft') changePhoto(-1);
+            if (e.key === 'Escape') closeLightbox();
+        }
+    });
+
+    // Close on backdrop click
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .sub-container {
+        max-width: 600px;
+        margin: 3rem auto;
+        padding: 2.5rem;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+    }
+    .sub-container h1 {
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+        text-align: center;
+    }
+    .sub-container p {
+        color: #64748b;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #334155;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    .btn-pay {
+        width: 100%;
+        background-color: #0284c7;
+        color: #ffffff;
+        border: none;
+        padding: 0.85rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: background 0.2s ease;
+    }
+    .btn-pay:hover {
+        background-color: #0369a1;
+    }
+</style>
+
+<div class="sub-container">
+    <h1>Member Subscription</h1>
+    <p>Join Neogi Para Nagarikbrinda and support community activities.</p>
+
+    <form id="subscriptionForm" onsubmit="processSubscription(event)">
+        <div class="form-group">
+            <label for="memberName">Full Name</label>
+            <input type="text" id="memberName" class="form-control" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="memberPhone">Phone Number</label>
+            <input type="tel" id="memberPhone" class="form-control" placeholder="Enter 10-digit mobile number" required>
+        </div>
+
+        <div class="form-group">
+            <label for="subscriptionAmount">Subscription Amount (₹)</label>
+            <input type="number" id="subscriptionAmount" class="form-control" value="500" min="100" required>
+        </div>
+
+        <button type="submit" class="btn-pay">Proceed to Payment</button>
+    </form>
+</div>
+
+<!-- Razorpay Integration Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+async function processSubscription(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('memberName').value;
+    const phone = document.getElementById('memberPhone').value;
+    const amount = document.getElementById('subscriptionAmount').value;
+
+    try {
+        const response = await fetch('/create-payment-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: amount })
+        });
+        const order = await response.json();
+
+        const options = {
+            "key": "{{ key_id }}",
+            "amount": order.amount,
+            "currency": "INR",
+            "name": "Neogi Para Nagarikbrinda",
+            "description": "Annual Member Subscription",
+            "order_id": order.id,
+            "handler": async function (res) {
+                const verifyRes = await fetch('/verify-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        razorpay_order_id: res.razorpay_order_id,
+                        razorpay_payment_id: res.razorpay_payment_id,
+                        razorpay_signature: res.razorpay_signature,
+                        name: name,
+                        phone: phone,
+                        amount: amount,
+                        category: "Member Subscription"
+                    })
+                });
+                const result = await verifyRes.json();
+                if (result.status === 'success') {
+                    alert('Payment successful! Your membership details have been recorded.');
+                    window.location.href = '/';
+                } else {
+                    alert('Payment verification failed.');
+                }
+            },
+            "prefill": { "name": name, "contact": phone },
+            "theme": { "color": "#0284c7" }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+    } catch (err) {
+        alert("Failed to initialize payment gateway. Check your API Keys in app.py.");
+    }
+}
+</script>
+{% endblock %}

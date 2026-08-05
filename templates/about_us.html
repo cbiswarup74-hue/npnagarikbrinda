@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Full-Bleed Deep Cream Background (Matching Activities Pages) */
+    html, body {
+        background-color: #f5efe6 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .about-page {
+        background-color: #f5efe6;
+        min-height: 100vh;
+        padding: 3rem 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .about-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .hero-title {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .hero-title h1 {
+        font-weight: 800;
+        color: #3d2c1e;
+        font-size: 2.8rem;
+    }
+
+    .hero-title p {
+        color: #1e293b;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    .about-card {
+        background: #fffdfa;
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(61, 44, 30, 0.08);
+        border: 1px solid #e6dcd0;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .about-card h2 {
+        color: #0284c7;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .about-card p {
+        color: #3d2c1e;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .value-box {
+        background: #fefcf8;
+        padding: 1.5rem;
+        border-radius: 14px;
+        border: 1px solid #e2d8cd;
+        border-left: 5px solid #0284c7;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .value-box h4 {
+        color: #3d2c1e;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .value-box p {
+        color: #64748b;
+        font-size: 0.98rem;
+        line-height: 1.6;
+    }
+
+    /* Executive Leadership Cards */
+    .leadership-card {
+        background: #fffdfa;
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(61, 44, 30, 0.08);
+        border: 1px solid #e6dcd0;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+    }
+
+    .avatar-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-circle {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #0284c7;
+        box-shadow: 0 8px 20px rgba(2, 132, 199, 0.2);
+        background-color: #e2e8f0;
+    }
+
+    .leadership-card h3 {
+        color: #3d2c1e;
+        font-weight: 800;
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .leadership-role {
+        color: #0284c7;
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .leadership-message {
+        color: #3d2c1e;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        max-width: 850px;
+        margin: 0 auto;
+        font-style: italic;
+    }
+
+    /* Section Divider Header */
+    .section-header-title {
+        text-align: center;
+        color: #3d2c1e;
+        font-weight: 800;
+        font-size: 2.2rem;
+        margin: 3.5rem 0 2rem 0;
+        position: relative;
+    }
+
+    .section-header-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: #0284c7;
+        margin: 0.6rem auto 0 auto;
+        border-radius: 2px;
+    }
+
+    /* Row 1: Top Committee Members (2 Columns) */
+    .committee-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Row 2: Cultural Secretaries (3 Columns) */
+    .committee-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .member-card {
+        background: #fffdfa;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(61, 44, 30, 0.06);
+        border: 1px solid #e6dcd0;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .member-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(61, 44, 30, 0.12);
+    }
+
+    .member-circle {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #0284c7;
+        box-shadow: 0 6px 15px rgba(2, 132, 199, 0.18);
+        background-color: #e2e8f0;
+        margin: 0 auto 1.2rem auto;
+        display: block;
+    }
+
+    .member-card h4 {
+        color: #3d2c1e;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .member-role {
+        color: #0284c7;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .member-bio {
+        color: #64748b;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        font-style: italic;
+    }
+
+    /* Responsive adjustment for mobile screens */
+    @media (max-width: 768px) {
+        .committee-grid-2, .committee-grid-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="about-page">
+    <div class="about-container">
+        
+        <div class="hero-title">
+            <h1>About Neogi Para Nagarikbrinda</h1>
+            <p>Fostering unity, socio-cultural harmony, and community development in Baranagar.</p>
+        </div>
+
+        <!-- History & Legacy Card -->
+        <div class="about-card">
+            <h2>Our History & Legacy</h2>
+            <p>
+                Established with a vision to unite the residents of Neogi Para Road and surrounding areas, 
+                <strong>Neogi Para Nagarikbrinda</strong> has grown into a cornerstone of civic, cultural, and socio-welfare activity in Baranagar, Kolkata. 
+                Through decades of dedicated effort, our organization has continuously brought families together across generations through festival celebrations, community aid, and youth engagement.
+            </p>
+        </div>
+
+        <!-- Core Objectives Card -->
+        <div class="about-card">
+            <h2>Our Core Objectives</h2>
+            <div class="values-grid">
+                <div class="value-box">
+                    <h4>Cultural Heritage</h4>
+                    <p>Organizing grand festival celebrations like Sharodotsav, Shyama Puja, and Dol Utsav to keep traditional Bengali art, music, and culture alive.</p>
+                </div>
+                <div class="value-box">
+                    <h4>Community Welfare</h4>
+                    <p>Conducting health check-up camps, blood donation drives, educational support programs, and emergency assistance for neighborhood residents.</p>
+                </div>
+                <div class="value-box">
+                    <h4>Youth & Talent Development</h4>
+                    <p>Hosting annual sit-and-draw contests, sports competitions, and workshops to nurture creative and athletic talent among the local youth.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Executive Committee Section Header -->
+        <h2 class="section-header-title">Executive Committee</h2>
+
+        <!-- Message from Club President -->
+        <div class="leadership-card">
+            <div class="avatar-wrapper">
+                <img src="{{ url_for('static', filename='images/president.jpeg') }}" class="profile-circle" alt="Club President">
+            </div>
+            <h3>Message from the President</h3>
+            <div class="leadership-role">Dr. Girish Chandra Bera</div>
+            <p class="leadership-message">
+                "Welcome to Neogi Para Nagarikbrinda. Our objective has always been to build a compassionate, culturally vibrant community where every family feels connected. Together, we continue to preserve our heritage and work for the betterment of our neighborhood."
+            </p>
+        </div>
+
+        <!-- Message from Secretary -->
+        <div class="leadership-card">
+            <div class="avatar-wrapper">
+                <img src="{{ url_for('static', filename='images/secretary.jpeg') }}" class="profile-circle" alt="Club Secretary">
+            </div>
+            <h3>Message from the Secretary</h3>
+            <div class="leadership-role">Biswarup Chakraborty</div>
+            <p class="leadership-message">
+                "It is a privilege to serve our community through various social and cultural endeavors. Through collective participation, youth workshops, and welfare initiatives, we aim to inspire meaningful progress and unity across all generations in Baranagar."
+            </p>
+        </div>
+
+        <!-- Committee Members Section Header -->
+        <h3 style="color: #3d2c1e; font-weight: 800; font-size: 1.6rem; margin-top: 3.5rem; text-align: center;">Committee Members</h3>
+
+        <!-- ROW 1: Shyamal Kr. Gangopadhyay & Sanjoy Das -->
+        <div class="committee-grid-2">
+            <!-- Member 1: Shyamal Kr. Gangopadhyay -->
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/shyamal_gangopadhyay.jpeg') }}" class="member-circle" alt="Shyamal Kr. Gangopadhyay">
+                <h4>Shyamal Kr. Gangopadhyay</h4>
+                <div class="member-role">Treasurer</div>
+                <p class="member-bio">Founder member guarding our financial strength and preserving our founding heritage.</p>
+            </div>
+
+            <!-- Member 2: Sanjoy Das -->
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/sanjoy_das.jpeg') }}" class="member-circle" alt="Sanjoy Das">
+                <h4>Sanjoy Das</h4>
+                <div class="member-role">Assistant Secretary</div>
+                <p class="member-bio">A passionate biker, community worker and innovative in execution.</p>
+            </div>
+        </div>
+
+        <!-- ROW 2: Joint Cultural Secretaries (3 members) -->
+        <div class="committee-grid-3">
+            <!-- Member 3: Ankita Ghosh -->
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/ankita_ghosh.jpeg') }}" class="member-circle" alt="Ankita Ghosh">
+                <h4>Ankita Ghosh</h4>
+                <div class="member-role">Joint Cultural Secretary</div>
+                <p class="member-bio">Believes in core values and creating smiles.</p>
+            </div>
+
+            <!-- Member 4: Debjani Debnath -->
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/debjani_debnath.jpeg') }}" class="member-circle" alt="Debjani Debnath">
+                <h4>Debjani Debnath</h4>
+                <div class="member-role">Joint Cultural Secretary</div>
+                <p class="member-bio">Believes that simplicity is the ultimate sophistication.</p>
+            </div>
+
+            <!-- Member 5: Sangita Guin -->
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/sangita_guin.jpeg') }}" class="member-circle" alt="Sangita Guin">
+                <h4>Sangita Guin</h4>
+                <div class="member-role">Joint Cultural Secretary</div>
+                <p class="member-bio">Dedicated to promoting cultural arts & community heritage.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

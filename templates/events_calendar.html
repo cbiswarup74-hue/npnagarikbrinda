@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .events-page {
+        background-color: #f8fafc;
+        min-height: 100vh;
+        padding: 3rem 1.5rem;
+    }
+    .events-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .hero-title {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    .hero-title h1 {
+        font-weight: 800;
+        color: #0284c7;
+        font-size: 2.5rem;
+    }
+    .section-divider {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 2.5rem 0 1.25rem 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .event-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem 2rem;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    .event-card.past {
+        opacity: 0.85;
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+    .event-date {
+        background: #0284c7;
+        color: #ffffff;
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+        text-align: center;
+        min-width: 110px;
+    }
+    .event-date.past-date {
+        background: #64748b;
+    }
+    .event-date .month {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .event-date .day {
+        font-size: 1.6rem;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+    .event-details h3 {
+        color: #0f172a;
+        margin-bottom: 0.3rem;
+        font-size: 1.25rem;
+    }
+    .event-details p {
+        color: #64748b;
+        margin: 0;
+    }
+    .badge-status {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        margin-left: auto;
+    }
+    .badge-upcoming { background: #e0f2fe; color: #0369a1; }
+    .badge-completed { background: #dcfce7; color: #15803d; }
+</style>
+
+<div class="events-page">
+    <div class="events-container">
+        <div class="hero-title">
+            <h1>Events Calendar 2026</h1>
+            <p class="text-muted fs-5">Upcoming highlights and completed neighborhood events for the year 2026.</p>
+        </div>
+
+        <!-- UPCOMING EVENTS SECTION -->
+        <div class="section-divider">
+            📅 Upcoming Events (Late 2026)
+        </div>
+
+        <div class="event-card" style="flex-wrap: wrap;">
+            <div class="event-date">
+                <div class="month">AUG</div>
+                <div class="day">30</div>
+            </div>
+            <div class="event-details" style="flex: 1; min-width: 250px;">
+                <h3>Sit and Draw Competition</h3>
+                <p>Annual children's art contest encouraging creativity and artistic expression among neighborhood youth.</p>
+                
+                <!-- Banner Image Preview & Action Button -->
+                <div style="margin-top: 1rem;">
+                    <img src="{{ url_for('static', filename='images/sit_and_draw_banner.jpeg') }}" 
+                         alt="Sit and Draw Banner" 
+                         style="max-width: 100%; max-height: 220px; border-radius: 8px; border: 1px solid #cbd5e1; display: block; margin-bottom: 0.75rem;">
+                    
+                    <a href="{{ url_for('static', filename='images/sit_and_draw_banner.jpeg') }}" target="_blank" class="btn btn-sm btn-outline-primary" style="font-weight: 600; text-decoration: none;">
+                        🔍 View / Download Full Banner
+                    </a>
+                </div>
+            </div>
+            <span class="badge-status badge-upcoming">Upcoming</span>
+        </div>
+
+        <div class="event-card">
+            <div class="event-date" style="background: #475569;">
+                <div class="month">2026</div>
+                <div class="day" style="font-size: 1.1rem; padding-top: 4px;">TBA</div>
+            </div>
+            <div class="event-details">
+                <h3>Health Check-up Camp</h3>
+                <p>Comprehensive health screening and consultation camp for local residents. Exact date to be finalized soon.</p>
+            </div>
+            <span class="badge-status badge-upcoming">Upcoming</span>
+        </div>
+
+        <div class="event-card">
+            <div class="event-date">
+                <div class="month">OCT</div>
+                <div class="day">17 - 21</div>
+            </div>
+            <div class="event-details">
+                <h3>Sharodotsav (Durga Puja 2026)</h3>
+                <p>Grand annual celebration featuring community bhog, dhunuchi naach, and daily cultural events.</p>
+            </div>
+            <span class="badge-status badge-upcoming">Upcoming</span>
+        </div>
+
+        <div class="event-card">
+            <div class="event-date">
+                <div class="month">NOV</div>
+                <div class="day">08</div>
+            </div>
+            <div class="event-details">
+                <h3>Shyama Puja & Kali Puja Illumination</h3>
+                <p>Midnight Puja rituals accompanied by neighborhood illumination and sweet distribution.</p>
+            </div>
+            <span class="badge-status badge-upcoming">Upcoming</span>
+        </div>
+
+        <div class="event-card">
+            <div class="event-date">
+                <div class="month">DEC</div>
+                <div class="day">25</div>
+            </div>
+            <div class="event-details">
+                <h3>Winter Picnic & Sports Meet</h3>
+                <p>Annual neighborhood picnic, children's sports events, and year-end family gathering.</p>
+            </div>
+            <span class="badge-status badge-upcoming">Upcoming</span>
+        </div>
+
+        <!-- COMPLETED EVENTS SECTION -->
+        <div class="section-divider" style="margin-top: 3rem;">
+            ✅ Completed Events (Earlier 2026)
+        </div>
+
+        <div class="event-card past">
+            <div class="event-date past-date">
+                <div class="month">JAN</div>
+                <div class="day">26</div>
+            </div>
+            <div class="event-details">
+                <h3>Republic Day Flag Hoisting & Free Health Camp</h3>
+                <p>Flag hoisting ceremony followed by a free health and eye checkup camp for residents.</p>
+            </div>
+            <span class="badge-status badge-completed">Completed</span>
+        </div>
+
+        <div class="event-card past">
+            <div class="event-date past-date">
+                <div class="month">FEB</div>
+                <div class="day">23</div>
+            </div>
+            <div class="event-details">
+                <h3>Saraswati Puja & Children's Drawing Contest</h3>
+                <p>Morning floral worship, Hate Khori for kids, and the annual Sit-and-Draw art competition.</p>
+            </div>
+            <span class="badge-status badge-completed">Completed</span>
+        </div>
+
+        <div class="event-card past">
+            <div class="event-date past-date">
+                <div class="month">MAR</div>
+                <div class="day">04</div>
+            </div>
+            <div class="event-details">
+                <h3>Dol Utsav / Basanta Utsav</h3>
+                <p>Prabhat Pheri, morning Rabindra Sangeet, and festive gulal/abir exchanges.</p>
+            </div>
+            <span class="badge-status badge-completed">Completed</span>
+        </div>
+
+        <div class="event-card past">
+            <div class="event-date past-date">
+                <div class="month">MAY</div>
+                <div class="day">09</div>
+            </div>
+            <div class="event-details">
+                <h3>Rabindra-Nazrul Jayanti Cultural Evening</h3>
+                <p>Tribute evening with musical performances, poetry recitations, and dances by local residents.</p>
+            </div>
+            <span class="badge-status badge-completed">Completed</span>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

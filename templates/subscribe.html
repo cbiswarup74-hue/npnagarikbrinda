@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Razorpay Checkout JS Library -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<div style="max-width: 600px; margin: 0 auto;">
+    <h1>{{ title }}</h1>
+    <p style="color: #64748b;">{{ description }}</p>
+
+    <div style="background: #f8fafc; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 1.5rem;">
+        <form id="payment-form" onsubmit="initiateRazorpayPayment(event)">
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: bold; margin-bottom: 0.5rem;">Full Name</label>
+                <input type="text" id="user_name" required style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: bold; margin-bottom: 0.5rem;">Email Address</label>
+                <input type="email" id="user_email" required style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: bold; margin-bottom: 0.5rem;">Phone Number</label>
+                <input type="tel" id="user_phone" required style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: bold; margin-bottom: 0.5rem;">Amount (₹)</label>
+                <input type="number" id="pay_amount" value="{{ default_amount }}" min="10" required style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; font-size: 1.1rem;">
+            </div>
+
+            <!-- Supported Gateways Info -->
+            <div style="margin-bottom: 1.5rem; background: #ffffff; padding: 1rem; border-radius: 6px; border: 1px solid #cbd5e1;">
+                <p style="font-weight: bold; margin-top: 0; color: #1e293b;">Supported Options:</p>
+                <ul style="margin: 0; padding-left: 1.2rem; color: #475569; line-height: 1.6;">
+                    <li>📱 <strong>UPI:</strong> Google Pay, PhonePe, Paytm, BHIM</li>
+                    <li>💳 <strong>Cards:</strong> Credit & Debit Cards</li>
+                    <li>🏦 <strong>NetBanking:</strong> All Major Indian Banks</li>
+                </ul>
+            </div>
+
+            <button type="submit" id="pay-btn" style="width: 100%; background: #16a34a; color: white; border: none; padding: 1rem; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">
+                Proceed to Pay
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+async function initiateRazorpayPayment(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("user_name").value;
+    const email = document.getElementById("user_email").value;
+    const phone = document.getElementById("user_phone").value;
+    const amount = document.getElementById("pay_amount").value;
+
+    const payBtn = document.getElementById("pay-btn");
+    payBtn.innerText = "Processing...";
+    payBtn.disabled = true;
+
+    try {
+        // Step 1: Request backend to create Razorpay Order
+        const response = await fetch("/create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ amount: amount })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert("Error creating order: " + (data.error || "Invalid API keys"));
+            payBtn.innerText = "Proceed to Pay";
+            payBtn.disabled = false;
+            return;
+        }
+
+        const order = data.order;
+
+        // Step 2: Open Razorpay Popup Window
+        const options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": order.amount,
+            "currency": "INR",
+            "name": "Club Portal Subscription",
+            "description": "{{ title }}",
+            "order_id": order.id,
+            "prefill": {
+                "name": name,
+                "email": email,
+                "contact": phone
+            },
+            "handler": async function (response) {
+                // Step 3: Verify Payment Signature on server
+                const verifyRes = await fetch("/verify-payment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                });
+
+                const result = await verifyRes.json();
+                if (result.status === "success") {
+                    alert("🎉 Payment Successful!\nPayment ID: " + response.razorpay_payment_id);
+                    window.location.href = "/";
+                } else {
+                    alert("❌ Payment verification failed.");
+                }
+            },
+            "theme": { "color": "#0284c7" }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (err) {
+        alert("Transaction could not be initialized.");
+        console.error(err);
+    } finally {
+        payBtn.innerText = "Proceed to Pay";
+        payBtn.disabled = false;
+    }
+}
+</script>
+{% endblock %}

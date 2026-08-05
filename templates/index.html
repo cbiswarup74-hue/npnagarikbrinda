@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Global Reset to Force Edge-to-Edge Layout */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden; /* Prevents horizontal scrollbars */
+    }
+
+    /* Carousel Container - Full Width Edge-to-Edge */
+    .slider-container {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        height: 520px;
+        overflow: hidden;
+        border-radius: 0; /* Removed border-radius so edges meet screen boundaries */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background-color: #0f172a;
+    }
+
+    .slide {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    .slide.active {
+        display: block;
+    }
+
+    /* Standard slide image styling */
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    /* Slide 1 specific positioning to preserve faces and banner proportions */
+    .slide.slide-1 img {
+        object-fit: cover !important;
+        object-position: 50% 15% !important;
+    }
+
+    /* Floating Music Toggle Button */
+    .music-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        background: rgba(15, 23, 42, 0.85);
+        color: #f8fafc;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 0.6rem 1.2rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 600;
+        backdrop-filter: blur(6px);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .music-btn:hover {
+        background: rgba(2, 132, 199, 0.95);
+        border-color: #38bdf8;
+    }
+
+    /* Gradient overlay for readable text */
+    .overlay {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.1) 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 3rem;
+        box-sizing: border-box;
+        color: white;
+    }
+
+    .overlay h1 {
+        font-size: 2.2rem;
+        margin: 0 0 0.8rem 0;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+    }
+
+    .overlay p {
+        font-size: 1.15rem;
+        margin: 0 0 1.5rem 0;
+        max-width: 750px;
+        line-height: 1.5;
+        color: #f1f5f9;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: background 0.3s;
+        z-index: 5;
+    }
+
+    .slider-btn:hover { background: rgba(0, 0, 0, 0.8); }
+    .prev-btn { left: 15px; }
+    .next-btn { right: 15px; }
+
+    .dots-container {
+        position: absolute;
+        bottom: 15px;
+        width: 100%;
+        text-align: center;
+        z-index: 5;
+    }
+
+    .dot {
+        height: 12px;
+        width: 12px;
+        margin: 0 5px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        display: inline-block;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .dot.active-dot {
+        background-color: #38bdf8;
+        width: 24px;
+        border-radius: 10px;
+    }
+
+    .cta-btn {
+        display: inline-block;
+        background: #0284c7;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 6px;
+        transition: background 0.3s;
+        width: fit-content;
+    }
+
+    .cta-btn:hover { background: #0369a1; }
+</style>
+
+<div class="slider-container">
+    <!-- Music Button -->
+    <button id="musicToggle" class="music-btn" title="Toggle Music">
+        🎵 Play Music
+    </button>
+    <audio id="bgMusic" loop preload="auto">
+        <source src="{{ url_for('static', filename='images/bg-music.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    <!-- Slide 1 -->
+    <div class="slide slide-1 active">
+        <img src="{{ url_for('static', filename='images/slide1.jpg') }}" alt="Slide 1">
+        <div class="overlay">
+            <h1>Welcome to Neogipara Nagarikbrinda</h1>
+            <p>Bringing people together through cultural activities, festive celebrations, community gatherings, and social welfare.</p>
+            <a href="/subscribe/member" class="cta-btn">Join as Member</a>
+        </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/slide2.jpg') }}" alt="Slide 2">
+        <div class="overlay">
+            <h1>Cultural Excellence</h1>
+            <p>"The tallest trees once started as fragile seeds. Never doubt the power of small beginnings."</p>
+            <a href="/activities/cultural-activities" class="cta-btn">Explore Cultural Activities</a>
+        </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/slide3.jpg') }}" alt="Slide 3" style="object-position: center 20%;">
+        <div class="overlay">
+            <h1>Festive Celebrations</h1>
+            <p>"Celebrating divine power, inner strength, and the triumph of good over evil."</p>
+            <a href="/activities/festivals" class="cta-btn">View Festivals & Events</a>
+        </div>
+    </div>
+
+    <!-- Slide 4 -->
+<div class="slide">
+    <img src="{{ url_for('static', filename='images/slide4.jpg') }}" alt="Social Activities & Workshops">
+    <div class="overlay">
+        <h1>Workshops & Social Activities</h1>
+        <p>Empowering our community through knowledge sharing, interactive workshops, and meaningful social initiatives.</p>
+        <a href="{{ url_for('social_workshops') }}" class="cta-btn">Explore Activities & Workshops</a>
+    </div>
+</div>
+
+    <!-- Slide 5 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/slide5.jpg') }}" alt="Slide 5">
+        <div class="overlay">
+            <h1>Patriotic & National Events</h1>
+            <p>"Honouring the pride, sacrifices, and unity of the nation."</p>
+            <a href="/events" class="cta-btn">View Events Calendar</a>
+        </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/slide6.jpg') }}" alt="Slide 6">
+        <div class="overlay">
+            <h1>Community & Brotherhood</h1>
+            <p>"What is it to be a human if not to live for one another?"</p>
+            <a href="/contact" class="cta-btn">Get In Touch</a>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <button class="slider-btn prev-btn" onclick="changeSlide(-1)">❮</button>
+    <button class="slider-btn next-btn" onclick="changeSlide(1)">❯</button>
+
+    <div class="dots-container">
+        <span class="dot active-dot" onclick="setSlide(0)"></span>
+        <span class="dot" onclick="setSlide(1)"></span>
+        <span class="dot" onclick="setSlide(2)"></span>
+        <span class="dot" onclick="setSlide(3)"></span>
+        <span class="dot" onclick="setSlide(4)"></span>
+        <span class="dot" onclick="setSlide(5)"></span>
+    </div>
+</div>
+
+<script>
+    /* Carousel Script */
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    let autoSlideInterval;
+
+    function showSlide(index) {
+        if (index >= slides.length) currentSlide = 0;
+        else if (index < 0) currentSlide = slides.length - 1;
+        else currentSlide = index;
+
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            dots[i].classList.remove('active-dot');
+        });
+
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active-dot');
+    }
+
+    function changeSlide(direction) {
+        showSlide(currentSlide + direction);
+        resetAutoSlide();
+    }
+
+    function setSlide(index) {
+        showSlide(index);
+        resetAutoSlide();
+    }
+
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 5000);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        startAutoSlide();
+    }
+
+    startAutoSlide();
+
+    /* Robust Audio Controls */
+    document.addEventListener('DOMContentLoaded', function() {
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggle');
+
+        if (audio) {
+            audio.volume = 0.3; // 30% volume
+        }
+
+        musicBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevents conflict with global click listener
+            if (audio.paused) {
+                audio.play().then(() => {
+                    musicBtn.innerHTML = "🔊 Mute Music";
+                    musicBtn.style.background = "rgba(2, 132, 199, 0.95)";
+                }).catch(err => console.error("Audio error:", err));
+            } else {
+                audio.pause();
+                musicBtn.innerHTML = "🎵 Play Music";
+                musicBtn.style.background = "rgba(15, 23, 42, 0.85)";
+            }
+        });
+    });
+</script>
+{% endblock %}
