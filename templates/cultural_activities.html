@@ -26,7 +26,7 @@
     .hero-banner {
         position: relative;
         background: linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.55)), 
-                    url('/static/images/rn_sandhya/photo7.jpeg');
+                    url('/static/images/photo7.jpeg');
         background-size: cover;
         background-position: center 12%;
         color: #ffffff;
@@ -357,8 +357,8 @@
 
         <!-- 1. Featured Photo 1 Card with Brush Splashes -->
         <div class="featured-card">
-            <div class="featured-img" onclick="openSinglePhoto('/static/images/rn_sandhya/photo1.jpeg')">
-                <img src="/static/images/rn_sandhya/photo1.jpeg" alt="Rabindra-Nazrul Sandhya Feature Photo">
+            <div class="featured-img" onclick="openSinglePhoto('/static/images/photo1.jpeg')">
+                <img src="/static/images/photo1.jpeg" alt="Rabindra-Nazrul Sandhya Feature Photo">
             </div>
             <div class="featured-body">
                 <!-- SVG Brush Splashes Background (Green, Maroon, Indigo) -->
@@ -389,7 +389,7 @@
         <div class="pinboard-container">
             <div class="pinned-photo-card" onclick="openCategoryGallery('felicitation')">
                 <div class="pin-head"></div>
-                <img src="/static/images/rn_sandhya/photo6.jpeg" class="pinned-photo-img" alt="Felicitation Stack Preview">
+                <img src="/static/images/photo6.jpeg" class="pinned-photo-img" alt="Felicitation Stack Preview">
                 <div class="pinned-note-badge">
                     <span>📌 Click here to see all photos</span>
                 </div>
@@ -405,7 +405,7 @@
         <div class="pinboard-container">
             <div class="pinned-photo-card" style="transform: rotate(3deg);" onclick="openCategoryGallery('celebration')">
                 <div class="pin-head"></div>
-                <img src="/static/images/rn_sandhya/photo2.jpeg" class="pinned-photo-img" alt="Celebration Moments Stack Preview">
+                <img src="/static/images/photo2.jpeg" class="pinned-photo-img" alt="Celebration Moments Stack Preview">
                 <div class="pinned-note-badge">
                     <span>📌 Click here to see all photos</span>
                 </div>
@@ -432,15 +432,15 @@
     // Gallery Datasets
     const galleries = {
         'felicitation': [
-            '/static/images/rn_sandhya/photo6.jpeg',
-            '/static/images/rn_sandhya/photo8.jpeg',
-            '/static/images/rn_sandhya/photo16.jpeg',
-            '/static/images/rn_sandhya/photo17.jpeg'
+            '/static/images/photo6.jpeg',
+            '/static/images/photo8.jpeg',
+            '/static/images/photo16.jpeg',
+            '/static/images/photo17.jpeg'
         ],
         'celebration': [
             {% for i in range(1, 31) %}
                 {% if i not in [1, 6, 8, 16, 17] %}
-                    '/static/images/rn_sandhya/photo{{ i }}.jpeg',
+                    '/static/images/photo{{ i }}.jpeg',
                 {% endif %}
             {% endfor %}
         ]
