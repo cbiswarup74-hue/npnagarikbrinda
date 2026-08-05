@@ -1,10 +1,17 @@
+import os
 import sqlite3
 from datetime import datetime
 from functools import wraps
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, render_template_string
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, render_template_string, send_from_directory
 import razorpay
 
-app = Flask(__name__)
+# Initialize Flask with explicit static folder configuration
+app = Flask(
+    __name__,
+    static_url_path='/static',
+    static_folder='static'
+)
+
 app.secret_key = 'neogi_para_super_secret_key_change_me'  # Required for Flask session cookies
 
 # Admin Credentials
@@ -54,6 +61,11 @@ def login_required(f):
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
     return decorated_function
+
+# Dedicated Explicit Static File Fallback Route (Solves 404 Image issue on Render)
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(app.static_folder, filename)
 
 # Main Site Navigation Routes
 @app.route('/')
